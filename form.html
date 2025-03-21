@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>身分證申請表</title>
+    <style>
+        body {
+            font-family: 'Microsoft JhengHei', 'Times New Roman', sans-serif;
+            margin: 0;
+            padding: 10px;
+            background-color: #f9f9f9;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .document {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border: 1px solid #ddd;
+            box-shadow: 0 0 15px rgba(0,0,0,0.05);
+            position: relative;
+        }
+        
+        .watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-45deg);
+            font-size: 80px;
+            color: rgba(200, 200, 200, 0.15);
+            pointer-events: none;
+            z-index: 0;
+            white-space: nowrap;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+            border-bottom: 2px solid #000;
+            padding-bottom: 15px;
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        
+        h1 {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+        
+        .subtitle {
+            font-size: 16px;
+            margin-top: 5px;
+        }
+        
+        .form-section {
+            margin-bottom: 25px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #ccc;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="date"],
+        input[type="file"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .form-col {
+            flex: 1 0 250px;
+        }
+        
+        .required::after {
+            content: "*";
+            color: red;
+            margin-left: 3px;
+        }
+        
+        .checkbox-label {
+            font-weight: normal;
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        
+        .checkbox-label input {
+            margin-right: 10px;
+        }
+        
+        .submit-button {
+            background-color: #005BAA;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s;
+            width: 100%;
+            max-width: 300px;
+        }
+        
+        .submit-button:hover {
+            background-color: #004080;
+        }
+        
+        .footer {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid #ccc;
+            font-size: 12px;
+            text-align: center;
+            color: #666;
+        }
+        
+        .date-inputs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .date-inputs select {
+            flex: 1 0 60px;
+        }
+        
+        .radio-group {
+            margin-top: 5px;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        
+        .radio-label {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 15px;
+            margin-bottom: 8px;
+            font-weight: normal;
+        }
+        
+        .radio-label input {
+            margin-right: 5px;
+        }
+        
+        .file-input-container {
+            position: relative;
+        }
+        
+        .file-input-container input[type="file"] {
+            padding: 8px;
+        }
+        
+        .file-input-help {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        
+        .upload-status {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        
+        .upload-progress {
+            width: 100%;
+            background-color: #f3f3f3;
+            border-radius: 5px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .progress-bar {
+            height: 15px;
+            background-color: #005BAA;
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        
+        /* 手機適應性樣式 */
+        @media (max-width: 600px) {
+            body {
+                padding: 5px;
+            }
+            
+            .document {
+                padding: 15px;
+            }
+            
+            .watermark {
+                font-size: 60px;
+            }
+            
+            h1 {
+                font-size: 20px;
+            }
+            
+            .logo div {
+                font-size: 30px !important;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .form-col {
+                flex: 1 0 100%;
+            }
+            
+            .radio-group {
+                flex-direction: column;
+            }
+            
+            .radio-label {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
+            
+            .submit-button {
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="document">
+        <div class="watermark">身分證申請表</div>
+        
+        <div class="header">
+            <div class="logo">
+                <div style="font-size: 40px; font-weight: bold;">身分證明文件</div>
+            </div>
+            <h1>身分證申請表</h1>
+            <div class="subtitle">IDENTITY CARD APPLICATION FORM</div>
+        </div>
+        
+        <form id="applicationForm" method="POST" action="https://docs.google.com/forms/d/e/1FAIpQLSc_YZacpjwk70R-02oE3fla-v5JMnept8e_ll2i2PfnJThXWw/formResponse">
+            <div class="form-section">
+                <div class="section-title">申請人個人資料</div>
+                
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="name" class="required">姓名</label>
+                            <input type="text" id="name" name="entry.1868938530" required>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="gender">性別</label>
+                            <select id="gender" name="entry.1457961672">
+                                <option value="">請選擇</option>
+                                <option value="男">男</option>
+                                <option value="女">女</option>
+                                <option value="其他">其他</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="birthdate" class="required">出生年月日</label>
+                            <div class="date-inputs">
+                                <select id="year" name="entry.329002824_year" required>
+                                    <option value="">年</option>
+                                    <!-- 將由JavaScript動態生成 -->
+                                </select>
+                                
+                                <select id="month" name="entry.329002824_month" required>
+                                    <option value="">月</option>
+                                    <!-- 將由JavaScript動態生成 -->
+                                </select>
+                                
+                                <select id="day" name="entry.329002824_day" required>
+                                    <option value="">日</option>
+                                    <!-- 將由JavaScript動態生成 -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="constellation">星座</label>
+                            <select id="constellation" name="entry.1914766159">
+                                <option value="">請選擇</option>
+                                <option value="白羊座">白羊座 (3/21-4/19)</option>
+                                <option value="金牛座">金牛座 (4/20-5/20)</option>
+                                <option value="雙子座">雙子座 (5/21-6/21)</option>
+                                <option value="巨蟹座">巨蟹座 (6/22-7/22)</option>
+                                <option value="獅子座">獅子座 (7/23-8/22)</option>
+                                <option value="處女座">處女座 (8/23-9/22)</option>
+                                <option value="天秤座">天秤座 (9/23-10/23)</option>
+                                <option value="天蠍座">天蠍座 (10/24-11/21)</option>
+                                <option value="射手座">射手座 (11/22-12/21)</option>
+                                <option value="摩羯座">摩羯座 (12/22-1/19)</option>
+                                <option value="水瓶座">水瓶座 (1/20-2/18)</option>
+                                <option value="雙魚座">雙魚座 (2/19-3/20)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="avatar">大頭貼</label>
+                    <div class="file-input-container">
+                        <input type="file" id="avatar" accept="image/jpeg,image/png,image/gif">
+                        <div class="file-input-help">接受的檔案格式：JPG、PNG、GIF</div>
+                        <!-- 隱藏欄位用於存儲上傳後的URL -->
+                        <input type="hidden" id="avatar-link" name="entry.1214671721">
+                        <div id="upload-status" class="upload-status"></div>
+                        <div id="upload-progress" class="upload-progress">
+                            <div id="progress-bar" class="progress-bar"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <div class="section-title">MBTI 人格類型</div>
+                    
+                    <div class="form-group">
+                        <label>第一維度</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="entry.1918462517" value="E">
+                                外向 (E)
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="entry.1918462517" value="I">
+                                內向 (I)
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>第二維度</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="entry.1609256454" value="S">
+                                感覺 (S)
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="entry.1609256454" value="N">
+                                直覺 (N)
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>第三維度</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="entry.966231579" value="T">
+                                思考 (T)
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="entry.966231579" value="F">
+                                感受 (F)
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>第四維度</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="entry.953379661" value="J">
+                                判斷 (J)
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="entry.953379661" value="P">
+                                知覺 (P)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="ideal_type">理想型</label>
+                            <input type="text" id="ideal_type" name="entry.1224387873">
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="occupation">職業</label>
+                            <input type="text" id="occupation" name="entry.1242823877">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="language_skills">語言能力</label>
+                    <input type="text" id="language_skills" name="entry.336454433">
+                </div>
+            </div>
+            
+            <button type="submit" class="submit-button">提交申請</button>
+        </form>
+        
+        <div class="footer">
+            <p>身分證申請表 | 版本:2025-03 | 此表單有效期至2025年12月31日</p>
+            <p>© 2025 身分證明文件管理處. 版權所有</p>
+        </div>
+    </div>
+
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-analytics.js";
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-storage.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyC1FPViIdgM_tLLXPwJI9_hoor9qQoddiY",
+            authDomain: "file-upload-processor.firebaseapp.com",
+            projectId: "file-upload-processor",
+            storageBucket: "file-upload-processor.firebasestorage.app",
+            messagingSenderId: "503808393165",
+            appId: "1:503808393165:web:5fa95b4df56b83d8d40e84",
+            measurementId: "G-MNW80YTDS4"
+        };
+
+        // 初始化Firebase
+        const app = initializeApp(firebaseConfig);
+        const storage = getStorage(app);
+
+        // 確保DOM完全載入後執行
+        document.addEventListener('DOMContentLoaded', function() {
+            const yearSelect = document.getElementById('year');
+            const monthSelect = document.getElementById('month');
+            const daySelect = document.getElementById('day');
+            const fileInput = document.getElementById('avatar');
+            const form = document.getElementById('applicationForm');
+            const uploadStatus = document.getElementById('upload-status');
+            const uploadProgress = document.getElementById('upload-progress');
+            const progressBar = document.getElementById('progress-bar');
+            const avatarLinkInput = document.getElementById('avatar-link');
+            
+            // 首先清空現有選項，確保沒有重複
+            yearSelect.innerHTML = '<option value="">年</option>';
+            monthSelect.innerHTML = '<option value="">月</option>';
+            daySelect.innerHTML = '<option value="">日</option>';
+            
+            // 生成年份選項（1950年到當前年份）
+            const currentYear = new Date().getFullYear();
+            for (let year = 1950; year <= currentYear; year++) {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                yearSelect.appendChild(option);
+            }
+            
+            // 生成月份選項
+            for (let month = 1; month <= 12; month++) {
+                const option = document.createElement('option');
+                option.value = month;
+                option.textContent = month;
+                monthSelect.appendChild(option);
+            }
+            
+            // 當月份或年份改變時更新日期選項
+            function updateDays() {
+                const year = parseInt(yearSelect.value) || currentYear;
+                const month = parseInt(monthSelect.value) || 1;
+                
+                // 計算該月的天數
+                const daysInMonth = new Date(year, month, 0).getDate();
+                
+                // 清空現有選項
+                daySelect.innerHTML = '<option value="">日</option>';
+                
+                // 添加日期選項
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const option = document.createElement('option');
+                    option.value = day;
+                    option.textContent = day;
+                    daySelect.appendChild(option);
+                }
+            }
+            
+            // 監聽月份和年份變化
+            yearSelect.addEventListener('change', updateDays);
+            monthSelect.addEventListener('change', updateDays);
+            
+            // 初始化日期選項
+            updateDays();
+            
+            // 處理文件上傳
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    // 檢查檔案大小 (限制為5MB)
+                    if (file.size > 5 * 1024 * 1024) {
+                        uploadStatus.textContent = '檔案大小超過限制 (最大5MB)，請選擇較小的檔案。';
+                        uploadStatus.style.color = 'red';
+                        return;
+                    }
+                    
+                    // 檢查檔案類型
+                    if (!file.type.match('image.*')) {
+                        uploadStatus.textContent = '請上傳圖片檔案 (JPG, PNG, GIF)';
+                        uploadStatus.style.color = 'red';
+                        return;
+                    }
+                    
+                    // 顯示所選檔案名稱
+                    uploadStatus.textContent = `已選擇檔案: ${file.name}`;
+                    uploadStatus.style.color = '#005BAA';
+                }
+            });
+            
+            // 處理表單提交
+            form.addEventListener('submit', function(e) {
+                // 檢查是否有檔案需要上傳
+                if (fileInput.files.length > 0) {
+                    e.preventDefault(); // 阻止表單提交
+                    
+                    const file = fileInput.files[0];
+                    uploadStatus.textContent = '正在上傳檔案，請稍候...';
+                    uploadStatus.style.color = '#005BAA';
+                    uploadProgress.style.display = 'block';
+                    
+                    // 建立一個唯一的檔案名稱
+                    const fileName = new Date().getTime() + '_' + file.name;
+                    const storageRef = ref(storage, 'avatars/' + fileName);
+                    
+                    // 建立上傳任務
+                    const uploadTask = uploadBytesResumable(storageRef, file);
+                    
+                    // 監聽上傳進度
+                    uploadTask.on('state_changed', 
+                        (snapshot) => {
+                            // 顯示上傳進度
+                            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                            progressBar.style.width = progress + '%';
+                            uploadStatus.textContent = `上傳進度: ${Math.round(progress)}%`;
+                        }, 
+                        (error) => {
+                            // 處理錯誤
+                            uploadStatus.textContent = '上傳失敗: ' + error.message;
+                            uploadStatus.style.color = 'red';
+                            uploadProgress.style.display = 'none';
+                        }, 
+                        () => {
+                            // 上傳完成
+                            uploadStatus.textContent = '檔案上傳成功!';
+                            uploadStatus.style.color = 'green';
+                            
+                            // 獲取下載URL - 修正: 在回調內處理URL並提交表單
+                            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                                console.log("獲取到的下載URL:", downloadURL);
+                                
+                                // 確保獲取到有效的URL
+                                if (downloadURL && downloadURL.startsWith('https://')) {
+                                    // 將URL填入隱藏字段
+                                    avatarLinkInput.value = downloadURL;
+                                    
+                                    // 上傳成功後提交表單
+                                    setTimeout(function() {
+                                        uploadStatus.textContent = '提交表單中...';
+                                        form.submit();
+                                    }, 1000);
+                                } else {
+                                    uploadStatus.textContent = '獲取文件URL失敗，請重試';
+                                    uploadStatus.style.color = 'red';
+                                }
+                            }).catch(error => {
+                                console.error("獲取URL錯誤:", error);
+                                uploadStatus.textContent = '獲取文件URL失敗: ' + error.message;
+                                uploadStatus.style.color = 'red';
+                            });
+                        }
+                    );
+                }
+                // 如果沒有檔案，正常提交表單
+            });
+        });
+    </script>
+</body>
+</html>
